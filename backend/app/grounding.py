@@ -8,7 +8,10 @@ COMMON_NON_PLAYER_WORDS = {
     "Six", "Four", "Boundary", "Boundaries", "Target", "Chase", "Match",
     "Story", "Turning", "Point", "Watch", "Next", "India", "Pakistan",
     "Melbourne", "MCG", "Cup", "World", "T20", "Cricket", "Captain", "Keeper",
-    "Ab", "Yeh", "Aur", "Lekin", "Kyunki", "Match", "Jeet", "Haar", "Bhai",
+    "Keep", "Both", "Stay", "Look", "Now", "Can", "Will", "Since", "While",
+    "Still", "Just", "Current", "Final", "First", "Second", "Last", "Great",
+    "Big", "Good", "Game", "Action", "Side", "Sides", "Need", "Needs",
+    "Ab", "Yeh", "Aur", "Lekin", "Kyunki", "Jeet", "Haar", "Bhai", "Khel",
     "Yaar", "Pura", "Main", "Aap", "Aaye", "Gaye", "Chahiye", "Lagta", "Hoga",
     "Ek", "Do", "Teen", "Chaar", "Paanch", "Chheh", "Saat", "Aath", "Nau", "Dus"
 }
