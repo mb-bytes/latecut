@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: latecut-backend
+    runtime: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: ALLOWED_ORIGINS
+        value: "*"
+      - key: MATCH_JSON_PATH
+        value: backend/data/match.json
+      - key: CACHE_TTL_SECONDS
+        value: "60"
