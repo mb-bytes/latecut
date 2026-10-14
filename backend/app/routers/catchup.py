@@ -45,7 +45,7 @@ async def inspect_catchup(request: Request, language: str = "en"):
     facts = extract_facts(events_now, meta)
     moments = detect_key_moments(events_now, facts)
 
-    system_prompt = build_system_prompt(language, is_strict_retry=False)
+    system_prompt = build_system_prompt(language, facts=facts, is_strict_retry=False)
     user_message = build_user_prompt(facts, moments)
 
     return {

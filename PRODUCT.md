@@ -20,7 +20,7 @@ Deliver a grounded, one-tap AI catch-up of any live or replayed cricket match:
 
 ## Positioning
 
-Unlike generic sports apps that only display raw numbers (e.g. 132/4 in 16.2 ov) or ungrounded generative AI summaries that hallucinate player figures, I Just Joined pairs deterministic pure-math fact extraction with weighted key-moment detection and an automated post-generation grounding verification check. If any number or player name cannot be verified from the match data, the system flags it transparently or regenerates it under stricter constraints.
+Unlike generic sports apps that only display raw numbers (e.g. 132/4 in 16.2 ov) or ungrounded generative AI summaries that hallucinate player figures, LateCut pairs deterministic pure-math fact extraction with weighted key-moment detection and an automated post-generation grounding verification check. If any number or player name cannot be verified from the match data, the system flags it transparently or regenerates it under stricter constraints.
 
 ## Operating Context
 
@@ -43,9 +43,9 @@ Unlike generic sports apps that only display raw numbers (e.g. 132/4 in 16.2 ov)
 
 ## Brand Commitments
 
-- Name: I Just Joined (LateCut).
+- Name: LateCut.
 - Tone: Knowledgeable, enthusiastic cricket friend speaking naturally to a fan.
-- Aesthetic: Sports-modern dark mode, high-contrast green accents, clean typography, and elevated micro-interactions.
+- Aesthetic: Clean high-contrast white and vibrant cricket orange theme with Poppins typography and elevated micro-interactions.
 
 ## Evidence on Hand
 

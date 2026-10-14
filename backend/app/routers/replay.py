@@ -16,7 +16,7 @@ async def control_replay(req: ReplayControlRequest, request: Request):
     elif req.action == "seek":
         if req.over is None:
             raise HTTPException(status_code=400, detail="Over parameter required for seek")
-        await replay.seek(req.over)
+        await replay.seek(req.over, req.innings)
     elif req.action == "speed":
         if req.speed is None:
             raise HTTPException(status_code=400, detail="Speed parameter required")

@@ -26,6 +26,8 @@ class MatchMeta(BaseModel):
     toss_winner: str
     toss_decision: str
     players: Dict[str, List[str]]
+    event_name: str = ""
+    match_type: str = ""
 
 class BatterStat(BaseModel):
     name: str
@@ -115,6 +117,7 @@ class CatchupResponse(BaseModel):
 class ReplayControlRequest(BaseModel):
     action: str
     over: Optional[int] = None
+    innings: Optional[int] = None
     speed: Optional[float] = None
 
 class ReplayState(BaseModel):
@@ -138,6 +141,12 @@ class StateSnapshot(BaseModel):
     is_finished: bool
     match_result: Optional[str] = None
     replay: ReplayState
+    toss_winner: str = ""
+    toss_decision: str = ""
+    venue: str = ""
+    match_date: str = ""
+    event_name: str = ""
+    has_two_innings: bool = False
 
 class CatchupRequest(BaseModel):
     language: str = "en"

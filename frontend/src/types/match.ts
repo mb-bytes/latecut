@@ -135,6 +135,12 @@ export interface StateSnapshot {
   is_finished: boolean
   match_result: string | null
   replay: ReplayState
+  toss_winner: string
+  toss_decision: string
+  venue: string
+  match_date: string
+  event_name: string
+  has_two_innings: boolean
 }
 
 export interface InspectResponse {

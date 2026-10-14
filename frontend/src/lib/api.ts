@@ -10,11 +10,16 @@ export async function getState(): Promise<StateSnapshot> {
   return res.json()
 }
 
-export async function controlReplay(action: string, over?: number, speed?: number): Promise<ReplayState> {
+export async function controlReplay(
+  action: string,
+  over?: number,
+  speed?: number,
+  innings?: number
+): Promise<ReplayState> {
   const res = await fetch(`${API_BASE}/api/replay/control`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action, over, speed }),
+    body: JSON.stringify({ action, over, speed, innings }),
   })
   if (!res.ok) {
     throw new Error(`Failed to control replay: ${res.statusText}`)

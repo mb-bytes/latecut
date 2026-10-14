@@ -22,38 +22,38 @@ export const HowAiWorksPanel: React.FC<HowAiWorksPanelProps> = ({ catchupResult 
   }, [catchupResult])
 
   return (
-    <Card className="w-full bg-card/80 border-border/80 shadow-xl backdrop-blur-md rounded-2xl overflow-hidden mt-6">
-      <div className="p-4 sm:p-6 border-b border-border/60 flex items-center justify-between">
+    <Card className="w-full bg-card border border-orange-200/80 shadow-md hover:shadow-lg transition-shadow rounded-2xl overflow-hidden mt-6">
+      <div className="p-4 sm:p-6 border-b border-orange-100 flex items-center justify-between">
         <div>
           <h3 className="text-base font-bold text-foreground flex items-center gap-2">
-            <Cpu className="h-5 w-5 text-primary" />
+            <Cpu className="h-5 w-5 text-orange-600" />
             How the AI Works
           </h3>
           <p className="text-xs text-muted-foreground mt-0.5">
             Full auditability: deterministic facts, weighted moment detection, prompt construction, and grounding checks.
           </p>
         </div>
-        <Badge variant="outline" className="text-xs font-mono bg-secondary/50">
+        <Badge variant="outline" className="text-xs font-mono bg-orange-50 text-orange-700 border-orange-200 font-bold">
           Transparency & Safety
         </Badge>
       </div>
 
       <CardContent className="p-4 sm:p-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-2 sm:grid-cols-5 w-full bg-secondary/50 p-1 rounded-xl mb-6">
-            <TabsTrigger value="facts" className="text-xs flex items-center gap-1.5">
+          <TabsList className="grid grid-cols-2 sm:grid-cols-5 w-full bg-stone-100 p-1 rounded-xl mb-6 border border-stone-200/80">
+            <TabsTrigger value="facts" className="text-xs flex items-center gap-1.5 font-bold data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-lg">
               <Database className="h-3.5 w-3.5" /> Facts
             </TabsTrigger>
-            <TabsTrigger value="moments" className="text-xs flex items-center gap-1.5">
+            <TabsTrigger value="moments" className="text-xs flex items-center gap-1.5 font-bold data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-lg">
               <Key className="h-3.5 w-3.5" /> Key Moments
             </TabsTrigger>
-            <TabsTrigger value="prompt" className="text-xs flex items-center gap-1.5">
+            <TabsTrigger value="prompt" className="text-xs flex items-center gap-1.5 font-bold data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-lg">
               <Info className="h-3.5 w-3.5" /> Prompt
             </TabsTrigger>
-            <TabsTrigger value="grounding" className="text-xs flex items-center gap-1.5">
+            <TabsTrigger value="grounding" className="text-xs flex items-center gap-1.5 font-bold data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-lg">
               <ShieldCheck className="h-3.5 w-3.5" /> Grounding
             </TabsTrigger>
-            <TabsTrigger value="telemetry" className="text-xs flex items-center gap-1.5">
+            <TabsTrigger value="telemetry" className="text-xs flex items-center gap-1.5 font-bold data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-lg">
               <Activity className="h-3.5 w-3.5" /> Telemetry
             </TabsTrigger>
           </TabsList>
@@ -63,7 +63,7 @@ export const HowAiWorksPanel: React.FC<HowAiWorksPanelProps> = ({ catchupResult 
               Structured facts extracted deterministically from live delivery events:
             </div>
             {inspectData?.facts ? (
-              <pre className="bg-secondary/40 border border-border/60 rounded-xl p-4 text-xs font-mono text-foreground/90 overflow-x-auto max-h-96">
+              <pre className="bg-stone-50 border border-stone-200 rounded-xl p-4 text-xs font-mono text-stone-800 overflow-x-auto max-h-96">
                 {JSON.stringify(inspectData.facts, null, 2)}
               </pre>
             ) : (
@@ -78,22 +78,22 @@ export const HowAiWorksPanel: React.FC<HowAiWorksPanelProps> = ({ catchupResult 
             {inspectData?.key_moments && inspectData.key_moments.length > 0 ? (
               <div className="space-y-3">
                 {inspectData.key_moments.map((m, idx) => (
-                  <div key={idx} className="p-4 rounded-xl bg-secondary/30 border border-border/50 space-y-2">
+                  <div key={idx} className="p-4 rounded-xl bg-stone-50/70 border border-stone-200/80 space-y-2">
                     <div className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2">
-                        <Badge variant="secondary" className="font-mono text-xs font-bold text-primary">
+                        <Badge variant="outline" className="font-mono text-xs font-bold bg-orange-50 text-orange-700 border-orange-200">
                           Over {m.over_ball}
                         </Badge>
-                        <span className="font-semibold text-foreground text-sm">{m.description}</span>
+                        <span className="font-bold text-foreground text-sm">{m.description}</span>
                       </div>
-                      <Badge variant="outline" className="font-mono text-xs">
+                      <Badge variant="outline" className="font-mono text-xs bg-stone-100 text-stone-700 border-stone-300 font-bold">
                         Weight: {m.weight}
                       </Badge>
                     </div>
                     <div className="text-xs text-muted-foreground flex items-center justify-between pt-1">
                       <span>Reason: {m.reason}</span>
                     </div>
-                    <Progress value={Math.min(100, (m.weight / 5) * 100)} className="h-1.5" />
+                    <Progress value={Math.min(100, (m.weight / 5) * 100)} className="h-2 bg-orange-100" />
                   </div>
                 ))}
               </div>
@@ -107,19 +107,19 @@ export const HowAiWorksPanel: React.FC<HowAiWorksPanelProps> = ({ catchupResult 
           <TabsContent value="prompt" className="space-y-4">
             <div className="space-y-4">
               <div>
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
                   System Prompt (Constraint & Hallucination Guard)
                 </h4>
-                <div className="p-4 rounded-xl bg-secondary/40 border border-border/60 text-xs font-mono text-foreground/90 leading-relaxed">
+                <div className="p-4 rounded-xl bg-stone-50 border border-stone-200 text-xs font-mono text-stone-800 leading-relaxed">
                   {inspectData?.system_prompt || "Loading prompt..."}
                 </div>
               </div>
 
               <div>
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
                   User Message (Strict Facts + Moments JSON)
                 </h4>
-                <pre className="p-4 rounded-xl bg-secondary/40 border border-border/60 text-xs font-mono text-foreground/90 overflow-x-auto max-h-72">
+                <pre className="p-4 rounded-xl bg-stone-50 border border-stone-200 text-xs font-mono text-stone-800 overflow-x-auto max-h-72">
                   {inspectData?.user_message || "Loading user message..."}
                 </pre>
               </div>
@@ -133,14 +133,14 @@ export const HowAiWorksPanel: React.FC<HowAiWorksPanelProps> = ({ catchupResult 
 
             {catchupResult?.grounding_details ? (
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 rounded-xl bg-secondary/30 border border-border/40">
-                  <span className="text-xs font-semibold text-foreground">Overall Grounding Verification</span>
+                <div className="flex items-center justify-between p-3.5 rounded-xl bg-stone-50 border border-stone-200/80">
+                  <span className="text-xs font-bold text-foreground">Overall Grounding Verification</span>
                   <Badge
                     variant="outline"
                     className={
                       catchupResult.grounded
-                        ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-xs"
-                        : "bg-amber-500/10 text-amber-400 border-amber-500/30 text-xs"
+                        ? "bg-emerald-50 text-emerald-800 border-emerald-300 text-xs font-bold"
+                        : "bg-amber-50 text-amber-800 border-amber-300 text-xs font-bold"
                     }
                   >
                     {catchupResult.grounded ? "✓ 100% Grounded" : "⚠ Contains Unverified Entities"}
@@ -148,8 +148,8 @@ export const HowAiWorksPanel: React.FC<HowAiWorksPanelProps> = ({ catchupResult 
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-xl bg-secondary/20 border border-border/40 space-y-3">
-                    <h5 className="text-xs font-semibold uppercase text-muted-foreground">
+                  <div className="p-4 rounded-xl bg-stone-50/60 border border-stone-200/80 space-y-3">
+                    <h5 className="text-xs font-bold uppercase text-muted-foreground">
                       Verified Numbers
                     </h5>
                     <div className="flex flex-wrap gap-2">
@@ -162,11 +162,11 @@ export const HowAiWorksPanel: React.FC<HowAiWorksPanelProps> = ({ catchupResult 
                             variant="outline"
                             className={
                               num.found
-                                ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-xs flex items-center gap-1"
-                                : "bg-rose-500/10 text-rose-400 border-rose-500/30 text-xs flex items-center gap-1"
+                                ? "bg-emerald-50 text-emerald-800 border-emerald-300 text-xs font-bold flex items-center gap-1"
+                                : "bg-rose-50 text-rose-800 border-rose-300 text-xs font-bold flex items-center gap-1"
                             }
                           >
-                            {num.found ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                            {num.found ? <CheckCircle2 className="h-3 w-3 text-emerald-600" /> : <XCircle className="h-3 w-3 text-rose-600" />}
                             {num.value}
                           </Badge>
                         ))
@@ -174,8 +174,8 @@ export const HowAiWorksPanel: React.FC<HowAiWorksPanelProps> = ({ catchupResult 
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-secondary/20 border border-border/40 space-y-3">
-                    <h5 className="text-xs font-semibold uppercase text-muted-foreground">
+                  <div className="p-4 rounded-xl bg-stone-50/60 border border-stone-200/80 space-y-3">
+                    <h5 className="text-xs font-bold uppercase text-muted-foreground">
                       Verified Players & Entities
                     </h5>
                     <div className="flex flex-wrap gap-2">
@@ -188,11 +188,11 @@ export const HowAiWorksPanel: React.FC<HowAiWorksPanelProps> = ({ catchupResult 
                             variant="outline"
                             className={
                               name.found
-                                ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-xs flex items-center gap-1"
-                                : "bg-rose-500/10 text-rose-400 border-rose-500/30 text-xs flex items-center gap-1"
+                                ? "bg-emerald-50 text-emerald-800 border-emerald-300 text-xs font-bold flex items-center gap-1"
+                                : "bg-rose-50 text-rose-800 border-rose-300 text-xs font-bold flex items-center gap-1"
                             }
                           >
-                            {name.found ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                            {name.found ? <CheckCircle2 className="h-3 w-3 text-emerald-600" /> : <XCircle className="h-3 w-3 text-rose-600" />}
                             {name.value}
                           </Badge>
                         ))
@@ -203,7 +203,7 @@ export const HowAiWorksPanel: React.FC<HowAiWorksPanelProps> = ({ catchupResult 
               </div>
             ) : (
               <div className="text-xs text-muted-foreground p-6 text-center">
-                Trigger &quot;I Just Joined&quot; above to inspect live grounding metrics for the latest catch-up response.
+                Trigger &quot;LateCut&quot; above to inspect live grounding metrics for the latest catch-up response.
               </div>
             )}
           </TabsContent>
@@ -211,51 +211,51 @@ export const HowAiWorksPanel: React.FC<HowAiWorksPanelProps> = ({ catchupResult 
           <TabsContent value="telemetry" className="space-y-4">
             {catchupResult ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <div className="p-3 rounded-xl bg-secondary/30 border border-border/40">
-                  <div className="text-[11px] text-muted-foreground uppercase font-medium">Model</div>
-                  <div className="text-sm font-bold font-mono text-foreground mt-1">
+                <div className="p-3.5 rounded-xl bg-orange-50/40 border border-orange-200/70">
+                  <div className="text-[11px] text-muted-foreground uppercase font-bold">Model</div>
+                  <div className="text-sm font-black font-mono text-foreground mt-1">
                     {catchupResult.telemetry.model}
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-secondary/30 border border-border/40">
-                  <div className="text-[11px] text-muted-foreground uppercase font-medium">Tokens (In / Out)</div>
-                  <div className="text-sm font-bold font-mono text-foreground mt-1">
+                <div className="p-3.5 rounded-xl bg-orange-50/40 border border-orange-200/70">
+                  <div className="text-[11px] text-muted-foreground uppercase font-bold">Tokens (In / Out)</div>
+                  <div className="text-sm font-black font-mono text-foreground mt-1">
                     {catchupResult.telemetry.prompt_tokens} / {catchupResult.telemetry.completion_tokens}
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-secondary/30 border border-border/40">
-                  <div className="text-[11px] text-muted-foreground uppercase font-medium">Latency</div>
-                  <div className="text-sm font-bold font-mono text-foreground mt-1">
+                <div className="p-3.5 rounded-xl bg-orange-50/40 border border-orange-200/70">
+                  <div className="text-[11px] text-muted-foreground uppercase font-bold">Latency</div>
+                  <div className="text-sm font-black font-mono text-foreground mt-1">
                     {catchupResult.telemetry.total_latency_ms} ms
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-secondary/30 border border-border/40">
-                  <div className="text-[11px] text-muted-foreground uppercase font-medium">Time to First Token</div>
-                  <div className="text-sm font-bold font-mono text-foreground mt-1">
+                <div className="p-3.5 rounded-xl bg-orange-50/40 border border-orange-200/70">
+                  <div className="text-[11px] text-muted-foreground uppercase font-bold">Time to First Token</div>
+                  <div className="text-sm font-black font-mono text-foreground mt-1">
                     {catchupResult.telemetry.time_to_first_token_ms} ms
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-secondary/30 border border-border/40">
-                  <div className="text-[11px] text-muted-foreground uppercase font-medium">Cache Status</div>
-                  <div className="text-sm font-bold font-mono text-foreground mt-1">
+                <div className="p-3.5 rounded-xl bg-orange-50/40 border border-orange-200/70">
+                  <div className="text-[11px] text-muted-foreground uppercase font-bold">Cache Status</div>
+                  <div className="text-sm font-black font-mono text-orange-600 mt-1">
                     {catchupResult.telemetry.cached ? "Cache Hit (0ms)" : "Fresh Synthesis"}
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-secondary/30 border border-border/40">
-                  <div className="text-[11px] text-muted-foreground uppercase font-medium">Generation Mode</div>
-                  <div className="text-sm font-bold font-mono text-foreground mt-1">
+                <div className="p-3.5 rounded-xl bg-orange-50/40 border border-orange-200/70">
+                  <div className="text-[11px] text-muted-foreground uppercase font-bold">Generation Mode</div>
+                  <div className="text-sm font-black font-mono text-foreground mt-1">
                     {catchupResult.telemetry.ai ? "OpenAI Async" : "Deterministic Fallback"}
                   </div>
                 </div>
               </div>
             ) : (
               <div className="text-xs text-muted-foreground p-6 text-center">
-                Trigger &quot;I Just Joined&quot; above to inspect token counts, latencies, and generation telemetry.
+                Trigger &quot;LateCut&quot; above to inspect token counts, latencies, and generation telemetry.
               </div>
             )}
           </TabsContent>

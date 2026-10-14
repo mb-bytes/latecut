@@ -1,4 +1,4 @@
-# I Just Joined (LateCut) 🏏
+# LateCut 🏏
 
 AI-powered live cricket catch-up app providing one-tap, fully grounded context for fans joining a match late.
 
@@ -11,7 +11,7 @@ Cricket matches last anywhere from 3 to 8 hours. Fans frequently join mid-game: 
 - *Who got out, and did it break a match-winning partnership?*
 - *What is the exact match equation right now?*
 
-**I Just Joined** solves this with a single tap:
+**LateCut** solves this with a single tap:
 1. **Story so far**: A grounded 2-3 sentence summary of the innings state and chase equation.
 2. **Turning point**: The single most pivotal moment (breakthrough wicket, 20-run over, or milestone).
 3. **What to watch next**: Immediate tactical stakes for the current over.

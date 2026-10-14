@@ -4,25 +4,25 @@
 
 @layer base {
   :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 6.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 6.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 142.1 76.2% 42.3%;
-    --primary-foreground: 144.9 80.4% 10%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 142.1 76.2% 42.3%;
+    --background: 30 25% 98.5%;
+    --foreground: 20 14% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14% 10%;
+    --primary: 24.6 95% 53.1%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 33 100% 96.5%;
+    --secondary-foreground: 24 95% 36%;
+    --muted: 30 18% 94%;
+    --muted-foreground: 24 6% 45%;
+    --accent: 32 100% 93%;
+    --accent-foreground: 24 95% 36%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 28 30% 90%;
+    --input: 28 30% 90%;
+    --ring: 24.6 95% 53.1%;
     --radius: 0.75rem;
   }
 }
@@ -32,8 +32,12 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    @apply bg-background text-foreground antialiased font-sans;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     min-height: 100vh;
+  }
+  ::selection {
+    background-color: rgba(249, 115, 22, 0.25);
+    color: rgb(194, 65, 12);
   }
 }

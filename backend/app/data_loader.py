@@ -22,7 +22,9 @@ def load_match_data(file_path: str) -> Tuple[MatchMeta, List[BallEvent]]:
         date=info.get("dates", [""])[0] if info.get("dates") else "",
         toss_winner=toss.get("winner", ""),
         toss_decision=toss.get("decision", ""),
-        players=info.get("players", {})
+        players=info.get("players", {}),
+        event_name=info.get("event", {}).get("name", "") if isinstance(info.get("event"), dict) else str(info.get("event", "")),
+        match_type=info.get("match_type", "")
     )
 
     innings_list = data.get("innings", [])

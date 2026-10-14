@@ -35,11 +35,17 @@ class ReplayEngine:
             self._is_playing = False
 
     async def restart(self):
+        target_event = None
         async with self._lock:
             self._current_index = 0
             self._is_playing = True
+            if self._events:
+                target_event = self._events[0]
+        if target_event:
+            await self._notify_subscribers(target_event)
 
     async def seek(self, over: int, innings: Optional[int] = None):
+        target_event = None
         async with self._lock:
             target_innings = innings
             if target_innings is None:
@@ -57,6 +63,10 @@ class ReplayEngine:
 
             if target_index is not None:
                 self._current_index = target_index
+                target_event = self._events[target_index]
+
+        if target_event:
+            await self._notify_subscribers(target_event)
 
     async def set_speed(self, speed: float):
         async with self._lock:

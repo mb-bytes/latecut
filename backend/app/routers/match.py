@@ -13,7 +13,6 @@ def build_snapshot(request: Request) -> StateSnapshot:
 
     current_idx = replay._current_index
     events_now = events[:current_idx + 1] if events else []
-    replay_state = asyncio.run(replay.get_state()) if not asyncio.iscoroutinefunction(replay.get_state) else None
 
     facts = extract_facts(events_now, meta)
     all_batters = extract_batter_stats(events_now)
@@ -37,6 +36,8 @@ def build_snapshot(request: Request) -> StateSnapshot:
         total_balls=len(events)
     )
 
+    has_two_innings = any(e.innings == 2 for e in events) if events else False
+
     return StateSnapshot(
         score=facts.score,
         wickets=facts.wickets,
@@ -51,7 +52,13 @@ def build_snapshot(request: Request) -> StateSnapshot:
         target=facts.target,
         is_finished=is_finished,
         match_result=facts.match_result,
-        replay=r_state
+        replay=r_state,
+        toss_winner=meta.toss_winner,
+        toss_decision=meta.toss_decision,
+        venue=meta.venue,
+        match_date=meta.date,
+        event_name=meta.event_name,
+        has_two_innings=has_two_innings
     )
 
 @router.get("/api/state", response_model=StateSnapshot)
@@ -67,6 +74,8 @@ async def match_websocket(websocket: WebSocket):
 
     queue = asyncio.Queue(maxsize=100)
     replay.register_queue(queue)
+
+    has_two_innings = any(e.innings == 2 for e in events) if events else False
 
     try:
         current_idx = replay._current_index
@@ -99,7 +108,13 @@ async def match_websocket(websocket: WebSocket):
                 "target": facts.target,
                 "is_finished": facts.is_match_over or (current_idx >= len(events) - 1),
                 "match_result": facts.match_result,
-                "replay": r_state.model_dump()
+                "replay": r_state.model_dump(),
+                "toss_winner": meta.toss_winner,
+                "toss_decision": meta.toss_decision,
+                "venue": meta.venue,
+                "match_date": meta.date,
+                "event_name": meta.event_name,
+                "has_two_innings": has_two_innings
             }
         }
         await websocket.send_text(json.dumps(initial_payload))
@@ -133,7 +148,13 @@ async def match_websocket(websocket: WebSocket):
                     "target": f.target,
                     "is_finished": f.is_match_over or (cur_idx >= len(events) - 1),
                     "match_result": f.match_result,
-                    "replay": rep_state.model_dump()
+                    "replay": rep_state.model_dump(),
+                    "toss_winner": meta.toss_winner,
+                    "toss_decision": meta.toss_decision,
+                    "venue": meta.venue,
+                    "match_date": meta.date,
+                    "event_name": meta.event_name,
+                    "has_two_innings": has_two_innings
                 }
             }
             await websocket.send_text(json.dumps(payload))
