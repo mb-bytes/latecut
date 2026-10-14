@@ -5,9 +5,38 @@ const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000"
 
 export type StreamStatus = "idle" | "connecting" | "streaming" | "done" | "error"
 
+export interface StreamingSections {
+  story: string
+  turning_point: string
+  watch_next: string
+}
+
+function extractPartialCatchup(raw: string): StreamingSections {
+  const extractField = (fieldName: string): string => {
+    const pattern = new RegExp(`"${fieldName}"\\s*:\\s*"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)`, "s")
+    const match = raw.match(pattern)
+    if (!match) return ""
+    return match[1]
+      .replace(/\\n/g, "\n")
+      .replace(/\\"/g, '"')
+      .replace(/\\\\/g, "\\")
+  }
+
+  return {
+    story: extractField("story"),
+    turning_point: extractField("turning_point"),
+    watch_next: extractField("watch_next"),
+  }
+}
+
 export function useCatchupStream() {
   const [status, setStatus] = useState<StreamStatus>("idle")
   const [streamingText, setStreamingText] = useState<string>("")
+  const [streamingSections, setStreamingSections] = useState<StreamingSections>({
+    story: "",
+    turning_point: "",
+    watch_next: "",
+  })
   const [result, setResult] = useState<CatchupResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
   const abortControllerRef = useRef<AbortController | null>(null)
@@ -22,6 +51,7 @@ export function useCatchupStream() {
 
     setStatus("connecting")
     setStreamingText("")
+    setStreamingSections({ story: "", turning_point: "", watch_next: "" })
     setResult(null)
     setError(null)
 
@@ -41,6 +71,7 @@ export function useCatchupStream() {
       const reader = response.body.getReader()
       const decoder = new TextDecoder()
       let buffer = ""
+      let accumulatedRaw = ""
 
       while (true) {
         const { value, done } = await reader.read()
@@ -68,7 +99,10 @@ export function useCatchupStream() {
             try {
               const parsed = JSON.parse(dataText)
               if (parsed.delta) {
-                setStreamingText((prev) => prev + parsed.delta)
+                accumulatedRaw += parsed.delta
+                setStreamingText(accumulatedRaw)
+                const sections = extractPartialCatchup(accumulatedRaw)
+                setStreamingSections(sections)
               }
             } catch (err) {}
           } else if (eventType === "done") {
@@ -99,9 +133,10 @@ export function useCatchupStream() {
     }
     setStatus("idle")
     setStreamingText("")
+    setStreamingSections({ story: "", turning_point: "", watch_next: "" })
     setResult(null)
     setError(null)
   }, [])
 
-  return { trigger, reset, streamingText, result, status, error }
+  return { trigger, reset, streamingText, streamingSections, result, status, error }
 }

@@ -72,6 +72,8 @@ export interface FactsObject {
   current_bowler: string
   batting_team: string
   bowling_team: string
+  is_match_over: boolean
+  match_result: string | null
 }
 
 export interface KeyMoment {
@@ -131,6 +133,7 @@ export interface StateSnapshot {
   innings: number
   target: number | null
   is_finished: boolean
+  match_result: string | null
   replay: ReplayState
 }
 

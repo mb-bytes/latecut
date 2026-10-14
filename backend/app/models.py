@@ -77,6 +77,8 @@ class FactsObject(BaseModel):
     current_bowler: str
     batting_team: str
     bowling_team: str
+    is_match_over: bool = False
+    match_result: Optional[str] = None
 
 class KeyMoment(BaseModel):
     over_ball: str
@@ -134,6 +136,7 @@ class StateSnapshot(BaseModel):
     innings: int
     target: Optional[int] = None
     is_finished: bool
+    match_result: Optional[str] = None
     replay: ReplayState
 
 class CatchupRequest(BaseModel):

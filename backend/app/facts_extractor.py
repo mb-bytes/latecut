@@ -214,6 +214,22 @@ def extract_facts(events: List[BallEvent], meta: MatchMeta) -> FactsObject:
     current_batters = [last_event.batter, last_event.non_striker]
     current_bowler = last_event.bowler
 
+    is_match_over = False
+    match_result = None
+
+    if current_innings == 2 and target is not None:
+        if score >= target:
+            is_match_over = True
+            wickets_in_hand = 10 - wickets
+            match_result = f"{batting_team} won by {wickets_in_hand} wickets"
+        elif wickets >= 10 or overs_dec >= 20.0 or (last_event.over >= 19 and last_event.ball >= 6):
+            is_match_over = True
+            if score < target - 1:
+                runs_diff = (target - 1) - score
+                match_result = f"{bowling_team} won by {runs_diff} runs"
+            elif score == target - 1:
+                match_result = "Match tied"
+
     return FactsObject(
         score=score,
         wickets=wickets,
@@ -229,5 +245,7 @@ def extract_facts(events: List[BallEvent], meta: MatchMeta) -> FactsObject:
         current_batters=current_batters,
         current_bowler=current_bowler,
         batting_team=batting_team,
-        bowling_team=bowling_team
+        bowling_team=bowling_team,
+        is_match_over=is_match_over,
+        match_result=match_result
     )

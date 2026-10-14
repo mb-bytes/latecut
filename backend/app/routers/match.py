@@ -27,7 +27,7 @@ def build_snapshot(request: Request) -> StateSnapshot:
 
     current_bowler_stat = next((bw for bw in all_bowlers if bw.name == facts.current_bowler), None)
     current_innings = events_now[-1].innings if events_now else 1
-    is_finished = (current_idx >= len(events) - 1) if events else False
+    is_finished = facts.is_match_over or (current_idx >= len(events) - 1) if events else False
 
     from app.models import ReplayState
     r_state = ReplayState(
@@ -50,6 +50,7 @@ def build_snapshot(request: Request) -> StateSnapshot:
         innings=current_innings,
         target=facts.target,
         is_finished=is_finished,
+        match_result=facts.match_result,
         replay=r_state
     )
 
@@ -96,7 +97,8 @@ async def match_websocket(websocket: WebSocket):
                 "bowling_team": facts.bowling_team,
                 "innings": events_now[-1].innings if events_now else 1,
                 "target": facts.target,
-                "is_finished": current_idx >= len(events) - 1,
+                "is_finished": facts.is_match_over or (current_idx >= len(events) - 1),
+                "match_result": facts.match_result,
                 "replay": r_state.model_dump()
             }
         }
@@ -129,7 +131,8 @@ async def match_websocket(websocket: WebSocket):
                     "bowling_team": f.bowling_team,
                     "innings": new_ball.innings,
                     "target": f.target,
-                    "is_finished": cur_idx >= len(events) - 1,
+                    "is_finished": f.is_match_over or (cur_idx >= len(events) - 1),
+                    "match_result": f.match_result,
                     "replay": rep_state.model_dump()
                 }
             }

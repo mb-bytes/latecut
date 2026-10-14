@@ -11,7 +11,7 @@ import { CatchupCard } from "./components/CatchupCard"
 
 export function App() {
   const { state, ballFeed, connected, error: socketError, setState } = useMatchSocket()
-  const { status, streamingText, result, error: catchupError, trigger, reset } = useCatchupStream()
+  const { status, streamingSections, result, error: catchupError, trigger, reset } = useCatchupStream()
 
   const handleControl = async (action: string, over?: number, speed?: number) => {
     try {
@@ -40,6 +40,8 @@ export function App() {
           battingTeam={state?.batting_team || "Pakistan"}
           bowlingTeam={state?.bowling_team || "India"}
           connected={connected}
+          isFinished={state?.is_finished}
+          matchResult={state?.match_result}
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
@@ -52,9 +54,10 @@ export function App() {
           <div className="lg:col-span-5 flex flex-col gap-4 sticky top-4">
             <CatchupCard
               status={status}
-              streamingText={streamingText}
+              streamingSections={streamingSections}
               result={result}
               error={catchupError}
+              isMatchOver={state?.is_finished}
               onTrigger={handleTriggerCatchup}
               onReset={reset}
             />

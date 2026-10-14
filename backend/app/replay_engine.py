@@ -52,11 +52,8 @@ class ReplayEngine:
                     target_index = idx
                     break
 
-            if target_index is None:
-                for idx, event in enumerate(self._events):
-                    if event.over == over:
-                        target_index = idx
-                        break
+            if target_index is None and over >= 20 and self._events:
+                target_index = len(self._events) - 1
 
             if target_index is not None:
                 self._current_index = target_index

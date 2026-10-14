@@ -6,22 +6,24 @@ import { Skeleton } from "./ui/skeleton"
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group"
 import { CheckCircle2, AlertTriangle, BookOpen, Zap, Eye, RotateCw, Compass } from "lucide-react"
 import { CatchupResponse } from "../types/match"
-import { StreamStatus } from "../hooks/useCatchupStream"
+import { StreamStatus, StreamingSections } from "../hooks/useCatchupStream"
 
 interface CatchupCardProps {
   status: StreamStatus
-  streamingText: string
+  streamingSections: StreamingSections
   result: CatchupResponse | null
   error: string | null
+  isMatchOver?: boolean
   onTrigger: (language: "en" | "hinglish") => void
   onReset: () => void
 }
 
 export const CatchupCard: React.FC<CatchupCardProps> = ({
   status,
-  streamingText,
+  streamingSections,
   result,
   error,
+  isMatchOver = false,
   onTrigger,
   onReset,
 }) => {
@@ -110,14 +112,66 @@ export const CatchupCard: React.FC<CatchupCardProps> = ({
         )}
 
         {status === "streaming" && (
-          <div className="space-y-2 flex-1 flex flex-col justify-center">
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-primary flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-ping" />
-              Streaming Commentary
-            </div>
-            <div className="text-xs leading-relaxed text-foreground/90 bg-secondary/20 p-3 rounded-lg border border-border/40 font-mono">
-              {streamingText}
-              <span className="inline-block w-1.5 h-3.5 ml-1 bg-primary animate-pulse align-middle" />
+          <div className="space-y-2.5 flex-1 flex flex-col justify-between">
+            <div className="space-y-2">
+              <div className="p-3 rounded-lg bg-secondary/30 border border-border/40 space-y-1">
+                <div className="flex items-center gap-1.5 text-primary font-bold text-xs">
+                  <BookOpen className="h-3.5 w-3.5" />
+                  <span>Story So Far</span>
+                </div>
+                <p className="text-xs text-foreground/90 leading-relaxed font-sans min-h-[36px]">
+                  {streamingSections.story ? (
+                    <>
+                      {streamingSections.story}
+                      {!streamingSections.turning_point && (
+                        <span className="inline-block w-1.5 h-3.5 ml-1 bg-primary animate-pulse align-middle" />
+                      )}
+                    </>
+                  ) : (
+                    <span className="text-muted-foreground text-[11px] animate-pulse">Drafting match story...</span>
+                  )}
+                </p>
+              </div>
+
+              <div className="p-3 rounded-lg bg-secondary/30 border border-border/40 space-y-1">
+                <div className="flex items-center gap-1.5 text-amber-400 font-bold text-xs">
+                  <Zap className="h-3.5 w-3.5" />
+                  <span>Turning Point</span>
+                </div>
+                <p className="text-xs text-foreground/90 leading-relaxed font-sans min-h-[24px]">
+                  {streamingSections.turning_point ? (
+                    <>
+                      {streamingSections.turning_point}
+                      {!streamingSections.watch_next && (
+                        <span className="inline-block w-1.5 h-3.5 ml-1 bg-amber-400 animate-pulse align-middle" />
+                      )}
+                    </>
+                  ) : (
+                    <span className="text-muted-foreground text-[11px]">
+                      {streamingSections.story ? "Analyzing turning point..." : "—"}
+                    </span>
+                  )}
+                </p>
+              </div>
+
+              <div className="p-3 rounded-lg bg-secondary/30 border border-border/40 space-y-1">
+                <div className="flex items-center gap-1.5 text-cyan-400 font-bold text-xs">
+                  <Eye className="h-3.5 w-3.5" />
+                  <span>{isMatchOver ? "Match Conclusion" : "Watch Next"}</span>
+                </div>
+                <p className="text-xs text-foreground/90 leading-relaxed font-sans min-h-[24px]">
+                  {streamingSections.watch_next ? (
+                    <>
+                      {streamingSections.watch_next}
+                      <span className="inline-block w-1.5 h-3.5 ml-1 bg-cyan-400 animate-pulse align-middle" />
+                    </>
+                  ) : (
+                    <span className="text-muted-foreground text-[11px]">
+                      {streamingSections.turning_point ? "Determining match takeaway..." : "—"}
+                    </span>
+                  )}
+                </p>
+              </div>
             </div>
           </div>
         )}
@@ -157,7 +211,7 @@ export const CatchupCard: React.FC<CatchupCardProps> = ({
               <div className="p-3 rounded-lg bg-secondary/30 border border-border/40 space-y-1">
                 <div className="flex items-center gap-1.5 text-cyan-400 font-bold text-xs">
                   <Eye className="h-3.5 w-3.5" />
-                  <span>Watch Next</span>
+                  <span>{isMatchOver ? "Match Conclusion" : "Watch Next"}</span>
                 </div>
                 <p className="text-xs text-foreground/90 leading-relaxed">
                   {result.watch_next}

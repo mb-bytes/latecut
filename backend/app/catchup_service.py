@@ -24,14 +24,15 @@ def build_system_prompt(language: str, is_strict_retry: bool = False) -> str:
         strict_note = "CRITICAL: Under no circumstances mention any player, score, number, or event not directly listed in the provided facts JSON. Violating this will corrupt the stream."
 
     return (
-        "You are a friendly, cricket-loving friend explaining the current match situation to a casual fan who just joined. "
+        "You are a friendly, cricket-loving friend explaining the match situation to a casual fan who just joined. "
         f"{lang_inst} "
         "Strict rules: "
         "1. Use ONLY the facts and key moments JSON provided in the prompt. "
         "2. Never invent players, scores, boundaries, or events. "
         "3. Maximum 70 words in total across all fields. "
+        "4. If 'is_match_over' is true in facts: the match has completely finished and the final result is in 'match_result'! Clearly state that exact match result in 'story', highlight the decisive moment in 'turning_point', and for 'watch_next', discuss the post-match presentation, player of the match honors, or tournament standings. NEVER tell the fan to watch the next over or upcoming overs when the match has ended! "
         f"{strict_note} "
-        "4. Return strict JSON with exactly three keys: 'story', 'turning_point', 'watch_next'."
+        "5. Return strict JSON with exactly three keys: 'story', 'turning_point', 'watch_next'."
     )
 
 def build_user_prompt(facts: FactsObject, moments: List[KeyMoment]) -> str:
@@ -41,8 +42,17 @@ def build_user_prompt(facts: FactsObject, moments: List[KeyMoment]) -> str:
     }
     return json.dumps(payload, indent=2)
 
-def build_fallback(facts: FactsObject, moments: List[KeyMoment], language: str) -> Dict[str, str]:
-    if language.lower() == "hinglish":
+def build_fallback(facts: FactsObject, moments: list[KeyMoment], language: str) -> dict[str, str]:
+    if facts.is_match_over:
+        if language.lower() == "hinglish":
+            story = f"{facts.match_result}! {facts.batting_team} ne {facts.score}/{facts.wickets} score kiya in {facts.overs} overs."
+            turning_point = moments[0].description if moments else "Match bohot thrilling khatam hua."
+            watch_next = "Match khatam ho chuka hai, post-match presentation aur player of the match dekhein!"
+        else:
+            story = f"{facts.match_result}! {facts.batting_team} finished at {facts.score}/{facts.wickets} in {facts.overs} overs."
+            turning_point = moments[0].description if moments else "A thrilling finish to the match."
+            watch_next = "The match has concluded! Tune in for the post-match presentation and player of the match awards."
+    elif language.lower() == "hinglish":
         score_str = f"{facts.batting_team} ka score {facts.score}/{facts.wickets} hai in {facts.overs} overs."
         target_str = f" Target {facts.target} runs ka hai." if facts.target else ""
         story = f"{score_str}{target_str} Abhi match bohot exciting phase me hai."
@@ -119,7 +129,7 @@ async def stream_catchup(
     start_overall = time.time()
     over_bucket = int(float(facts.overs.split(".")[0])) // 2 if facts.overs else 0
     ball_bucket = int(float(facts.overs.split(".")[1])) // 3 if "." in facts.overs else 0
-    cache_key = f"{facts.score}:{over_bucket}:{ball_bucket}:{language.lower()}"
+    cache_key = f"{facts.score}:{over_bucket}:{ball_bucket}:{language.lower()}:{facts.is_match_over}"
 
     cached_response = catchup_cache.get(cache_key)
     if cached_response:
@@ -189,7 +199,7 @@ async def stream_catchup(
         full_raw = "".join(accumulated_chunks)
         parsed_json = json.loads(full_raw)
 
-        grounding_result = check_grounding(parsed_json, facts, meta)
+        grounding_result = check_grounding(parsed_json, facts, meta, moments)
 
         if not grounding_result.grounded:
             stricter_sys = build_system_prompt(language, is_strict_retry=True)
@@ -200,7 +210,7 @@ async def stream_catchup(
             )
             try:
                 retry_json = json.loads(retry_raw)
-                second_check = check_grounding(retry_json, facts, meta)
+                second_check = check_grounding(retry_json, facts, meta, moments)
                 parsed_json = retry_json
                 grounding_result = second_check
                 prompt_tokens += r_p_tokens

@@ -1,5 +1,5 @@
 import re
-from typing import Dict, Any, Optional, Set
+from typing import Dict, Any, Optional, Set, List
 from app.models import FactsObject, MatchMeta, GroundingResult, VerifiedItem
 
 COMMON_NON_PLAYER_WORDS = {
@@ -11,15 +11,21 @@ COMMON_NON_PLAYER_WORDS = {
     "Keep", "Both", "Stay", "Look", "Now", "Can", "Will", "Since", "While",
     "Still", "Just", "Current", "Final", "First", "Second", "Last", "Great",
     "Big", "Good", "Game", "Action", "Side", "Sides", "Need", "Needs",
-    "Ab", "Yeh", "Aur", "Lekin", "Kyunki", "Jeet", "Haar", "Bhai", "Khel",
-    "Yaar", "Pura", "Main", "Aap", "Aaye", "Gaye", "Chahiye", "Lagta", "Hoga",
+    "Won", "Win", "Wins", "Victory", "Presentation", "Award", "Awards",
+    "Trophy", "Tournament", "Player", "Players", "Standings", "Defeat",
+    "Don", "Insights", "Implications", "Announcement", "Tune", "Tunein",
+    "Ab", "Abhi", "Yeh", "Aur", "Lekin", "Kyunki", "Kyun", "Jeet", "Haar", "Bhai", "Khel",
+    "Yaar", "Pura", "Main", "Aap", "Aaye", "Gaye", "Gaya", "Chahiye", "Lagta", "Hoga",
+    "Khatam", "Jeeta", "Haara", "Dekhein", "Dekho", "Baad", "Kuch", "Sab", "Kaafi",
+    "Bohot", "Bahut", "Bas", "Koyi", "Koi", "Nahi", "Tak", "Jahan", "Naam", "Elan",
     "Ek", "Do", "Teen", "Chaar", "Paanch", "Chheh", "Saat", "Aath", "Nau", "Dus"
 }
 
 def check_grounding(
     catchup_json: Dict[str, Any],
     facts: FactsObject,
-    meta: Optional[MatchMeta] = None
+    meta: Optional[MatchMeta] = None,
+    moments: Optional[List[Any]] = None
 ) -> GroundingResult:
     full_text = " ".join([
         str(catchup_json.get("story", "")),
@@ -74,6 +80,18 @@ def check_grounding(
         valid_numbers.add(str(facts.first_innings_summary.wickets))
         valid_numbers.add(facts.first_innings_summary.overs)
 
+    if facts.match_result:
+        for num in re.findall(r"\b\d+(?:\.\d+)?\b", facts.match_result):
+            valid_numbers.add(num)
+
+    if moments:
+        for m in moments:
+            m_desc = getattr(m, "description", "") or ""
+            m_reason = getattr(m, "reason", "") or ""
+            m_ob = getattr(m, "over_ball", "") or ""
+            for num in re.findall(r"\b\d+(?:\.\d+)?\b", f"{m_desc} {m_reason} {m_ob}"):
+                valid_numbers.add(num)
+
     for standard_num in ["0", "1", "2", "3", "4", "5", "6", "10", "15", "20", "50", "100"]:
         valid_numbers.add(standard_num)
 
@@ -120,7 +138,8 @@ def check_grounding(
                     if len(part) > 2:
                         valid_players.add(part)
 
-    capitalized_words = re.findall(r"\b[A-Z][a-z]{2,}\b", full_text)
+    clean_text = re.sub(r"'\w+", "", full_text)
+    capitalized_words = re.findall(r"\b[A-Z][a-z]{2,}\b", clean_text)
     candidate_names = [w for w in capitalized_words if w not in COMMON_NON_PLAYER_WORDS]
 
     verified_names = []
