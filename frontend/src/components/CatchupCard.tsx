@@ -1,10 +1,10 @@
 import React, { useState } from "react"
-import { Card, CardContent } from "./ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Button } from "./ui/button"
 import { Badge } from "./ui/badge"
 import { Skeleton } from "./ui/skeleton"
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group"
-import { Sparkles, CheckCircle2, AlertTriangle, BookOpen, Zap, Eye, RefreshCw } from "lucide-react"
+import { CheckCircle2, AlertTriangle, BookOpen, Zap, Eye, RotateCw, Compass } from "lucide-react"
 import { CatchupResponse } from "../types/match"
 import { StreamStatus } from "../hooks/useCatchupStream"
 
@@ -28,174 +28,193 @@ export const CatchupCard: React.FC<CatchupCardProps> = ({
   const [language, setLanguage] = useState<"en" | "hinglish">("en")
 
   return (
-    <div className="w-full space-y-4">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-gradient-to-r from-primary/10 via-card to-card border border-primary/20 shadow-lg">
-        <div>
-          <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-primary" />
-            AI Live Catch-Up
-          </h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Arrived late? Get grounded context instantly with key moments and match trajectory.
-          </p>
+    <Card className="w-full h-full flex flex-col bg-card/90 border-border/80 shadow-lg backdrop-blur-sm rounded-xl overflow-hidden">
+      <CardHeader className="p-4 pb-3 border-b border-border/60 flex flex-row items-center justify-between space-y-0 gap-2">
+        <div className="flex items-center gap-2">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
+            <Compass className="h-4 w-4" />
+          </div>
+          <div>
+            <CardTitle className="text-sm font-bold tracking-tight text-foreground">
+              Match Catch-Up
+            </CardTitle>
+            <p className="text-[11px] text-muted-foreground">
+              Grounded instant match summary
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+        <div className="flex items-center gap-2">
           <ToggleGroup
             type="single"
             value={language}
             onValueChange={(val) => {
               if (val) setLanguage(val as "en" | "hinglish")
             }}
-            className="bg-secondary/60 p-1 rounded-xl border border-border/60"
+            className="bg-secondary/60 p-0.5 rounded-lg border border-border/50"
           >
-            <ToggleGroupItem value="en" size="sm" className="text-xs px-3">
-              English
+            <ToggleGroupItem value="en" size="sm" className="text-[11px] px-2 h-7 font-medium">
+              EN
             </ToggleGroupItem>
-            <ToggleGroupItem value="hinglish" size="sm" className="text-xs px-3">
+            <ToggleGroupItem value="hinglish" size="sm" className="text-[11px] px-2 h-7 font-medium">
               Hinglish
             </ToggleGroupItem>
           </ToggleGroup>
 
           <Button
-            size="lg"
+            size="sm"
             onClick={() => onTrigger(language)}
             disabled={status === "connecting" || status === "streaming"}
-            className="relative overflow-hidden font-bold tracking-wide shadow-md shadow-primary/20 group"
+            className="h-7 px-3 text-xs font-semibold shadow-sm"
           >
-            <span className="relative z-10 flex items-center gap-2">
-              <Sparkles className="h-4 w-4 group-hover:rotate-12 transition-transform" />
-              I Just Joined
-            </span>
-            <div className="absolute inset-0 bg-gradient-to-r from-primary via-emerald-400 to-primary opacity-0 group-hover:opacity-20 transition-opacity" />
+            I Just Joined
           </Button>
         </div>
-      </div>
+      </CardHeader>
 
-      {status !== "idle" && (
-        <Card className="w-full bg-card/90 border-border/80 shadow-2xl backdrop-blur-md overflow-hidden relative">
-          <div className="p-4 sm:p-6 space-y-6">
-            <div className="flex items-center justify-between pb-3 border-b border-border/60">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Catch-Up Summary ({language.toUpperCase()})
-                </span>
-                {result && (
-                  <Badge
-                    variant="outline"
-                    className={
-                      result.grounded
-                        ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-xs font-medium"
-                        : "bg-amber-500/10 text-amber-400 border-amber-500/30 text-xs font-medium"
-                    }
-                  >
-                    {result.grounded ? (
-                      <span className="flex items-center gap-1">
-                        <CheckCircle2 className="h-3 w-3" /> Grounded
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1">
-                        <AlertTriangle className="h-3 w-3" /> Unverified
-                      </span>
-                    )}
-                  </Badge>
-                )}
-                {result && !result.telemetry.ai && (
-                  <Badge variant="outline" className="bg-amber-500/20 text-amber-300 border-amber-500/40 text-xs font-medium">
-                    Template Fallback
+      <CardContent className="p-4 flex-1 flex flex-col justify-between space-y-3">
+        {status === "idle" && !result && (
+          <div className="flex flex-col items-center justify-center flex-1 py-8 text-center space-y-3">
+            <div className="h-10 w-10 rounded-full bg-secondary/60 border border-border/50 flex items-center justify-center text-muted-foreground">
+              <Compass className="h-5 w-5" />
+            </div>
+            <div className="max-w-[280px] space-y-1">
+              <p className="text-xs font-medium text-foreground">
+                Arrived mid-innings?
+              </p>
+              <p className="text-[11px] text-muted-foreground leading-normal">
+                Click &quot;I Just Joined&quot; to get the match story, pivotal turning point, and what to watch next.
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onTrigger(language)}
+              className="text-xs h-8"
+            >
+              Catch Me Up
+            </Button>
+          </div>
+        )}
+
+        {status === "connecting" && (
+          <div className="space-y-3 py-4 flex-1 flex flex-col justify-center">
+            <Skeleton className="h-4 w-3/4 bg-secondary/70" />
+            <Skeleton className="h-3 w-full bg-secondary/50" />
+            <Skeleton className="h-3 w-5/6 bg-secondary/50" />
+            <Skeleton className="h-3 w-2/3 bg-secondary/50" />
+            <div className="text-[11px] text-muted-foreground text-center animate-pulse pt-2">
+              Synthesizing match facts...
+            </div>
+          </div>
+        )}
+
+        {status === "streaming" && (
+          <div className="space-y-2 flex-1 flex flex-col justify-center">
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-primary flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-ping" />
+              Streaming Commentary
+            </div>
+            <div className="text-xs leading-relaxed text-foreground/90 bg-secondary/20 p-3 rounded-lg border border-border/40 font-mono">
+              {streamingText}
+              <span className="inline-block w-1.5 h-3.5 ml-1 bg-primary animate-pulse align-middle" />
+            </div>
+          </div>
+        )}
+
+        {status === "error" && (
+          <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs flex items-center justify-between">
+            <span>{error || "Catch-up failed"}</span>
+            <Button size="sm" variant="outline" onClick={() => onTrigger(language)} className="h-6 text-[10px] px-2">
+              Retry
+            </Button>
+          </div>
+        )}
+
+        {(status === "done" || (status === "idle" && result)) && result && (
+          <div className="space-y-3 flex-1 flex flex-col justify-between">
+            <div className="space-y-2.5">
+              <div className="p-3 rounded-lg bg-secondary/30 border border-border/40 space-y-1">
+                <div className="flex items-center gap-1.5 text-primary font-bold text-xs">
+                  <BookOpen className="h-3.5 w-3.5" />
+                  <span>Story So Far</span>
+                </div>
+                <p className="text-xs text-foreground/90 leading-relaxed">
+                  {result.story}
+                </p>
+              </div>
+
+              <div className="p-3 rounded-lg bg-secondary/30 border border-border/40 space-y-1">
+                <div className="flex items-center gap-1.5 text-amber-400 font-bold text-xs">
+                  <Zap className="h-3.5 w-3.5" />
+                  <span>Turning Point</span>
+                </div>
+                <p className="text-xs text-foreground/90 leading-relaxed">
+                  {result.turning_point}
+                </p>
+              </div>
+
+              <div className="p-3 rounded-lg bg-secondary/30 border border-border/40 space-y-1">
+                <div className="flex items-center gap-1.5 text-cyan-400 font-bold text-xs">
+                  <Eye className="h-3.5 w-3.5" />
+                  <span>Watch Next</span>
+                </div>
+                <p className="text-xs text-foreground/90 leading-relaxed">
+                  {result.watch_next}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-border/40 text-[11px]">
+              <div className="flex items-center gap-1.5">
+                <Badge
+                  variant="outline"
+                  className={
+                    result.grounded
+                      ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-[10px] font-medium px-1.5 py-0"
+                      : "bg-amber-500/10 text-amber-400 border-amber-500/30 text-[10px] font-medium px-1.5 py-0"
+                  }
+                >
+                  {result.grounded ? (
+                    <span className="flex items-center gap-1">
+                      <CheckCircle2 className="h-3 w-3" /> Grounded
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1">
+                      <AlertTriangle className="h-3 w-3" /> Unverified
+                    </span>
+                  )}
+                </Badge>
+
+                {!result.telemetry.ai && (
+                  <Badge variant="outline" className="bg-amber-500/20 text-amber-300 border-amber-500/40 text-[10px] px-1.5 py-0">
+                    Template
                   </Badge>
                 )}
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 <Button
                   size="sm"
                   variant="ghost"
                   onClick={() => onTrigger(language)}
-                  className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                  className="h-6 px-2 text-[10px] text-muted-foreground hover:text-foreground"
                 >
-                  <RefreshCw className="h-3.5 w-3.5 mr-1" /> Re-check
+                  <RotateCw className="h-3 w-3 mr-1" /> Refresh
                 </Button>
                 <Button
                   size="sm"
                   variant="ghost"
                   onClick={onReset}
-                  className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                  className="h-6 px-1.5 text-[10px] text-muted-foreground hover:text-foreground"
                 >
-                  Close
+                  Dismiss
                 </Button>
               </div>
             </div>
-
-            {status === "connecting" && (
-              <div className="space-y-3 py-4">
-                <Skeleton className="h-5 w-3/4 bg-secondary/60" />
-                <Skeleton className="h-4 w-full bg-secondary/50" />
-                <Skeleton className="h-4 w-5/6 bg-secondary/50" />
-                <div className="pt-2 text-xs text-muted-foreground text-center animate-pulse">
-                  Analyzing match situation and synthesizing commentary...
-                </div>
-              </div>
-            )}
-
-            {status === "streaming" && (
-              <div className="py-2">
-                <div className="text-xs text-muted-foreground uppercase font-semibold mb-2 flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-primary animate-ping" />
-                  Generating Realtime Catch-Up:
-                </div>
-                <div className="text-sm font-sans leading-relaxed text-foreground/90 bg-secondary/20 p-4 rounded-xl border border-border/40 font-mono">
-                  {streamingText}
-                  <span className="inline-block w-1.5 h-4 ml-1 bg-primary animate-pulse align-middle" />
-                </div>
-              </div>
-            )}
-
-            {status === "error" && (
-              <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-sm flex items-center justify-between">
-                <span>{error || "An error occurred during catch-up"}</span>
-                <Button size="sm" variant="outline" onClick={() => onTrigger(language)}>
-                  Retry
-                </Button>
-              </div>
-            )}
-
-            {status === "done" && result && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 rounded-xl bg-secondary/30 border border-border/50 space-y-2">
-                  <div className="flex items-center gap-2 text-primary font-bold text-sm">
-                    <BookOpen className="h-4 w-4" />
-                    <span>Story so far</span>
-                  </div>
-                  <p className="text-sm text-foreground/90 leading-relaxed">
-                    {result.story}
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-secondary/30 border border-border/50 space-y-2">
-                  <div className="flex items-center gap-2 text-amber-400 font-bold text-sm">
-                    <Zap className="h-4 w-4" />
-                    <span>Turning point</span>
-                  </div>
-                  <p className="text-sm text-foreground/90 leading-relaxed">
-                    {result.turning_point}
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-secondary/30 border border-border/50 space-y-2">
-                  <div className="flex items-center gap-2 text-cyan-400 font-bold text-sm">
-                    <Eye className="h-4 w-4" />
-                    <span>Watch next</span>
-                  </div>
-                  <p className="text-sm text-foreground/90 leading-relaxed">
-                    {result.watch_next}
-                  </p>
-                </div>
-              </div>
-            )}
           </div>
-        </Card>
-      )}
-    </div>
+        )}
+      </CardContent>
+    </Card>
   )
 }

@@ -14,30 +14,30 @@ export const MatchHeader: React.FC<MatchHeaderProps> = ({
   connected
 }) => {
   return (
-    <header className="w-full flex flex-col sm:flex-row items-center justify-between py-4 px-4 sm:px-6 bg-card/60 backdrop-blur-md border border-border/80 rounded-2xl mb-6 shadow-lg shadow-black/20">
+    <header className="w-full flex flex-row items-center justify-between py-2.5 px-4 bg-card/80 backdrop-blur-md border border-border/80 rounded-xl shadow-sm">
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/20 text-primary border border-primary/30">
-          <Radio className="h-5 w-5 animate-pulse" />
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
+          <Radio className="h-4 w-4 animate-pulse" />
         </div>
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
+            <h1 className="text-base font-bold tracking-tight text-foreground">
               {battingTeam || "Live"} vs {bowlingTeam || "Match"}
             </h1>
-            <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-xs font-semibold px-2 py-0.5">
+            <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-[10px] font-semibold px-1.5 py-0">
               LIVE
             </Badge>
           </div>
-          <p className="text-xs text-muted-foreground">
-            Melbourne Cricket Ground • Super 12
+          <p className="text-[11px] text-muted-foreground">
+            Melbourne Cricket Ground • ICC Men&apos;s T20 World Cup
           </p>
         </div>
       </div>
 
-      <div className="flex items-center gap-2 mt-3 sm:mt-0">
-        <span className={`h-2.5 w-2.5 rounded-full ${connected ? "bg-emerald-500 shadow-sm shadow-emerald-500/50" : "bg-rose-500"}`} />
+      <div className="flex items-center gap-2">
+        <span className={`h-2 w-2 rounded-full ${connected ? "bg-emerald-500 shadow-sm shadow-emerald-500/50" : "bg-rose-500"}`} />
         <span className="text-xs font-medium text-muted-foreground">
-          {connected ? "Feed Connected" : "Reconnecting..."}
+          {connected ? "Connected" : "Reconnecting"}
         </span>
       </div>
     </header>

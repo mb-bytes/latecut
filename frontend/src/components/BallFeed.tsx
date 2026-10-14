@@ -41,42 +41,42 @@ export const BallFeed: React.FC<BallFeedProps> = ({ balls }) => {
   }
 
   return (
-    <div className="w-full bg-card/70 border border-border/80 rounded-2xl p-4 shadow-md backdrop-blur-sm">
-      <div className="flex items-center justify-between pb-3 mb-2 border-b border-border/60">
+    <div className="w-full bg-card/80 border border-border/80 rounded-xl p-3 sm:p-4 shadow-sm">
+      <div className="flex items-center justify-between pb-2 mb-2 border-b border-border/50">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Live Ball Commentary
+          Live Commentary
         </h3>
-        <span className="text-[11px] text-muted-foreground font-mono">
-          Last {balls.length} Deliveries
+        <span className="text-[10px] text-muted-foreground font-mono">
+          Last {balls.length} Balls
         </span>
       </div>
 
-      <ScrollArea className="h-48 w-full pr-3">
+      <ScrollArea className="h-44 w-full pr-2">
         {balls.length === 0 ? (
-          <div className="text-center py-10 text-xs text-muted-foreground">
+          <div className="text-center py-8 text-xs text-muted-foreground">
             Awaiting deliveries...
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {balls.map((b) => (
               <div
                 key={`${b.innings}-${b.over}-${b.ball}-${b.index}`}
-                className="flex items-center justify-between text-xs p-2 rounded-lg bg-secondary/30 border border-border/40 hover:bg-secondary/50 transition-colors"
+                className="flex items-center justify-between text-xs p-1.5 rounded-lg bg-secondary/30 border border-border/40 hover:bg-secondary/50 transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <span className="font-mono font-semibold text-primary/90 text-[11px] min-w-[32px]">
+                  <span className="font-mono font-bold text-primary text-[11px] min-w-[28px]">
                     {b.over}.{b.ball}
                   </span>
-                  <span className="text-foreground font-medium">
+                  <span className="text-foreground text-xs font-medium truncate max-w-[170px]">
                     {b.bowler} to {b.batter}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className={`text-[10px] font-bold px-2 py-0.5 ${getBadgeStyle(b)}`}>
+                  <Badge variant="outline" className={`text-[10px] font-bold px-1.5 py-0 ${getBadgeStyle(b)}`}>
                     {getOutcomeText(b)}
                   </Badge>
-                  <span className="font-mono text-muted-foreground text-[11px] min-w-[50px] text-right">
+                  <span className="font-mono text-muted-foreground text-[11px] min-w-[44px] text-right">
                     {b.running_score}/{b.running_wickets}
                   </span>
                 </div>
