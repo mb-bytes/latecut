@@ -1,4 +1,4 @@
-# LateCut 🏏
+# LateCut
 
 AI-powered live cricket catch-up app providing one-tap, fully grounded context for fans joining a match late.
 
