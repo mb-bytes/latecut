@@ -156,32 +156,3 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 |---|---|---|
 | `VITE_API_URL` | HTTP base URL for FastAPI backend | `http://localhost:8000` |
 | `VITE_WS_URL` | WebSocket URL for match state stream | `ws://localhost:8000` |
-
----
-
-## 6. Deployment Steps
-
-### Backend on Render (`render.yaml` or Web Service)
-1. Link GitHub repository to Render.
-2. Select **Web Service** or use the included `render.yaml` blueprint.
-3. Runtime: **Python 3**.
-4. Build Command: `pip install -r backend/requirements.txt`
-5. Start Command: `uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port $PORT`
-6. Set Environment Variables: `OPENAI_API_KEY`, `OPENAI_MODEL`, `ALLOWED_ORIGINS`.
-
-Alternatively, deploy using the included `backend/Dockerfile`:
-```bash
-docker build -t latecut-backend -f backend/Dockerfile .
-docker run -p 8000:8000 -e OPENAI_API_KEY=your_key latecut-backend
-```
-
-### Frontend on Vercel
-1. Link GitHub repository to Vercel.
-2. Root Directory: `frontend`.
-3. Framework Preset: **Vite**.
-4. Build Command: `npm run build`
-5. Output Directory: `dist`
-6. Set Environment Variables:
-   - `VITE_API_URL`: Your deployed backend URL (e.g. `https://latecut-backend.onrender.com`)
-   - `VITE_WS_URL`: Your deployed backend WebSocket URL (e.g. `wss://latecut-backend.onrender.com`)
-7. Deploy. `frontend/vercel.json` ensures client-side routing rewrites are handled automatically.
